@@ -1,9 +1,6 @@
 vaderSentiment
 numpy
 pandas
-collections
-math
-re
 fuzzywuzzy
 nltk
 googletrans
@@ -11,4 +8,5 @@ os
 flask
 gdown
 google
-
+re
+os
