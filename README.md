@@ -18,16 +18,16 @@ sudo easy_install pip
 Install the requirements.txt libraries:
 
 ```
-pip3 install -r Requirements.txt
+pip3 install -r requirements.txt
 ```
 
 The code is available in our git repo. Clone to repository and get the code
 
 ```
-git clone https://
+git clone https://github.com/leonardopollesel/MidFintech.git
 ls
  
-cd RepoName/
+cd MidFintech/
 ls
 ```
 
