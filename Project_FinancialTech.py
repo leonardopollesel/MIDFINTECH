@@ -10,7 +10,16 @@ from nltk.corpus import wordnet
 import googletrans
 from googletrans import Translator
 import os
-from flask import Flask, escape, request, Response, render_template, redirect, url_for, send_file
+from flask import (
+    Flask,
+    escape,
+    request,
+    Response,
+    render_template,
+    redirect,
+    url_for,
+    send_file,
+)
 import gdown
 import csv
 from googlesearch import search
@@ -28,11 +37,11 @@ wordnet
 cwd = os.getcwd()
 
 # import dataset from Google Drive
-url = 'https://drive.google.com/uc?id=1y3h9VhQQgtvEuU0pvako1yO1RTPB86dz&export=download'
-output = 'dataset.csv'
+url = "https://drive.google.com/uc?id=1y3h9VhQQgtvEuU0pvako1yO1RTPB86dz&export=download"
+output = "dataset.csv"
 gdown.download(url, output, quiet=False)
 
-database = pd.read_csv(os.path.join(cwd, 'dataset.csv'))
+database = pd.read_csv(os.path.join(cwd, "dataset.csv"))
 database.drop_duplicates(subset="Blurb", inplace=True)
 database.reset_index(drop=True, inplace=True)
 
@@ -69,24 +78,18 @@ def get_blurb(user_title):
 
 # vectorize blurb
 def word2vec(word):
-    count_characters = Counter(
-        word
-    )
+    count_characters = Counter(word)
     set_characters = set(count_characters)
     length = math.sqrt(sum(c * c for c in count_characters.values()))
     return count_characters, set_characters, length, word
 
 
 def cosine_similarity(vector1, vector2, ndigits):
-    common_characters = vector1[1].intersection(
-        vector2[1]
-    )
+    common_characters = vector1[1].intersection(vector2[1])
     product_summation = sum(
         vector1[0][character] * vector2[0][character] for character in common_characters
     )
-    length = (
-        vector1[2] * vector2[2]
-    )
+    length = vector1[2] * vector2[2]
     if length == 0:
         similarity = 0
     else:
@@ -133,9 +136,7 @@ def find_similar(title_1, title_2):
                         for w in nltk.word_tokenize(input_2["Blurb"].iloc[j])
                     ]
                     input_v2 = word2vec(input_v2)
-                    similarity_score = cosine_similarity(
-                        input_v1, input_v2, 5
-                    )
+                    similarity_score = cosine_similarity(input_v1, input_v2, 5)
                     results.append(similarity_score)
     return np.around(np.mean(results), 5)
 
@@ -218,10 +219,12 @@ def find_sentiment(title_1):
 def homepage():
     return render_template("main.html")
 
+
 # page with all search services
 @app.route("/search_service", methods=["GET", "POST"])
 def search_service():
     return render_template("search.html")
+
 
 # ------------------- - search Author - -------------------
 @app.route("/search_author", methods=["GET", "POST"])
@@ -230,20 +233,23 @@ def search_author():
     if request.method == "POST":
         return redirect(url_for("/search_a_result"))
     else:
-        return render_template('search_a.html')
+        return render_template("search_a.html")
 
 
-@app.route('/search_a_result', methods=['GET', 'POST'])
+@app.route("/search_a_result", methods=["GET", "POST"])
 def search_a_result():
-    user_input = request.form['text']
+    user_input = request.form["text"]
 
     def find_au(author_input):
-        output0 = database[database['Author'] == author_input][['Title', 'Publisher', 'Year', 'ISBN']]
+        output0 = database[database["Author"] == author_input][
+            ["Title", "Publisher", "Year", "ISBN"]
+        ]
         return output0
 
     auth = find_au(user_input)
 
     return render_template("search_solution.html", tables=auth.to_html())
+
 
 # ------------------- - search Title - -------------------
 @app.route("/search_title", methods=["GET", "POST"])
@@ -255,17 +261,20 @@ def search_title():
         return render_template("search_t.html")
 
 
-@app.route('/search_t_result', methods=['GET', 'POST'])
+@app.route("/search_t_result", methods=["GET", "POST"])
 def search_t_result():
-    user_input1 = request.form['text']
+    user_input1 = request.form["text"]
 
     def find_ti(title_input):
-        output1 = database[database['Title'] == title_input][['Author', 'Publisher', 'Year', 'ISBN']]
+        output1 = database[database["Title"] == title_input][
+            ["Author", "Publisher", "Year", "ISBN"]
+        ]
         return output1
 
     title = find_ti(user_input1)
 
     return render_template("search_solution.html", tables=title.to_html())
+
 
 # ------------------- - search Isbn - -------------------
 @app.route("/search_isbn", methods=["GET", "POST"])
@@ -277,17 +286,20 @@ def search_isbn():
         return render_template("search_i.html")
 
 
-@app.route('/search_i_result', methods=['GET', 'POST'])
+@app.route("/search_i_result", methods=["GET", "POST"])
 def search_i_result():
-    user_input2 = request.form['text']
+    user_input2 = request.form["text"]
 
     def find_is(isbn_input):
-        output2 = database[database['ISBN'] == int(isbn_input)][['Author', 'Publisher', 'Title', 'Year']]
+        output2 = database[database["ISBN"] == int(isbn_input)][
+            ["Author", "Publisher", "Title", "Year"]
+        ]
         return output2
 
     isbn = find_is(user_input2)
 
     return render_template("search_solution.html", tables=isbn.to_html())
+
 
 # ------------------- - search Year - -------------------
 @app.route("/search_year", methods=["GET", "POST"])
@@ -299,17 +311,20 @@ def search_year():
         return render_template("search_y.html")
 
 
-@app.route('/search_y_result', methods=['GET', 'POST'])
+@app.route("/search_y_result", methods=["GET", "POST"])
 def search_y_result():
-    user_input3 = request.form['text']
+    user_input3 = request.form["text"]
 
     def find_ye(year_input):
-        output3 = database[database['Year'] == float(year_input)][['Author', 'Title', 'Publisher', 'ISBN']]
+        output3 = database[database["Year"] == float(year_input)][
+            ["Author", "Title", "Publisher", "ISBN"]
+        ]
         return output3
 
     year = find_ye(user_input3)
 
     return render_template("search_solution.html", tables=year.to_html())
+
 
 # ------------------- - search Publisher - -------------------
 @app.route("/search_publisher", methods=["GET", "POST"])
@@ -321,12 +336,14 @@ def search_publisher():
         return render_template("search_p.html")
 
 
-@app.route('/search_p_result', methods=['GET', 'POST'])
+@app.route("/search_p_result", methods=["GET", "POST"])
 def search_p_result():
-    user_input4 = request.form['text']
+    user_input4 = request.form["text"]
 
     def find_pu(publisher_input):
-        output4 = database[database['Publisher'] == publisher_input][['Author', 'Title', 'Year', 'ISBN']]
+        output4 = database[database["Publisher"] == publisher_input][
+            ["Author", "Title", "Year", "ISBN"]
+        ]
         return output4
 
     publ = find_pu(user_input4)
@@ -453,6 +470,7 @@ def sentiment_result():
     senti1 = book_sentiment(user_title1)
 
     return render_template("search_solution1.html", titles=user_title1, sentim=senti1)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
