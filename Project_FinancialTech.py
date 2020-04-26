@@ -360,7 +360,6 @@ def similarity():
         return render_template("find_similar.html")
 
 
-# this service is used to get the similarity score between two movies
 @app.route("/similarity_result", methods=["GET", "POST"])
 def similarity_result():
     user_title1 = request.form["text"]
@@ -447,6 +446,7 @@ def link_is_result():
     return render_template("search_solution.html", tables=links.to_html())
 
 
+# return sentiment score given a title
 @app.route("/sentiment_score", methods=["GET", "POST"])
 def sentiment_score():
     render_template("senti.html")
