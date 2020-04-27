@@ -1,4 +1,4 @@
-import numpy as np
+iimport numpy as np
 import pandas as pd
 from collections import Counter
 import math
@@ -24,6 +24,7 @@ import gdown
 import csv
 from googlesearch import search
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer as senti
+from textblob import TextBlob
 
 
 app = Flask(__name__)
@@ -44,7 +45,15 @@ gdown.download(url, output, quiet=False)
 database = pd.read_csv(os.path.join(cwd, "dataset.csv"))
 database.drop_duplicates(subset="Blurb", inplace=True)
 database.reset_index(drop=True, inplace=True)
+database["Sentiment Title"], database["Sentiment Blurb"] = np.nan, np.nan
 
+for i in range(len(database["Title"])):
+    blob = TextBlob(database["Title"].loc[i])
+    database["Sentiment Title"].loc[i] = blob.sentiment.polarity
+
+for i in range(len(database["Blurb"])):
+    blob = TextBlob(database["Blurb"].loc[i])
+    database["Sentiment Blurb"].loc[i] = blob.sentiment.polarity
 
 # function to clean blurb
 def blurb_cleaner(blurb):
@@ -446,7 +455,6 @@ def link_is_result():
     return render_template("search_solution.html", tables=links.to_html())
 
 
-# return sentiment score given a title
 @app.route("/sentiment_score", methods=["GET", "POST"])
 def sentiment_score():
     render_template("senti.html")
@@ -470,6 +478,60 @@ def sentiment_result():
     senti1 = book_sentiment(user_title1)
 
     return render_template("search_solution1.html", titles=user_title1, sentim=senti1)
+
+
+# ------------------ Sentiment for Title ------------------
+@app.route("/sentiment_title", methods=["GET", "POST"])
+def sentiment_title():
+    render_template("senti_t.html")
+    if request.method == "POST":
+        return redirect(url_for("/sentiment_title_result"))
+    else:
+        return render_template("senti_t.html")
+
+
+@app.route("/sentiment_title_result", methods=["GET", "POST"])
+def sentiment_title_result():
+    user_num = request.form["Number"]
+
+    def bysentiment_title(num):
+        database.sort_values(by=["Sentiment Title"], inplace=True)
+
+        top = database[["Title", "Sentiment Title"]][-num:]
+        bottom = database[["Title", "Sentiment Title"]][:num]
+
+        return top, bottom
+
+    table_senti = bysentiment_title(user_num)
+
+    return render_template("search_solution.html", tables=table_senti.to_html())
+
+
+# ------------------ Sentiment for Blurb ------------------
+@app.route("/sentiment_blurb", methods=["GET", "POST"])
+def sentiment_blurb():
+    render_template("senti_b.html")
+    if request.method == "POST":
+        return redirect(url_for("/sentiment_blurb_result"))
+    else:
+        return render_template("senti_b.html")
+
+
+@app.route("/sentiment_blurb_result", methods=["GET", "POST"])
+def sentiment_blurb_result():
+    user_num = request.form["Number"]
+
+    def bysentiment_blurb(num):
+        database.sort_values(by=["Sentiment Blurb"], inplace=True)
+
+        top = database[["Blurb", "Sentiment Blurb"]][-num:]
+        bottom = database[["Blurb", "Sentiment Blurb"]][:num]
+
+        return top, bottom
+
+    table_senti = bysentiment_blurb(user_num)
+
+    return render_template("search_solution.html", tables=table_senti.to_html())
 
 
 if __name__ == "__main__":
