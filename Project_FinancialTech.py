@@ -497,8 +497,8 @@ def sentiment_title_result():
     def bysentiment_title(num):
         database.sort_values(by=["Sentiment Title"], inplace=True)
 
-        top = database[["Title", "Sentiment Title"]][-num:]
-        bottom = database[["Title", "Sentiment Title"]][:num]
+        top = database[["Title", "Sentiment Title"]][-int(num):]
+        bottom = database[["Title", "Sentiment Title"]][:int(num)]
 
         return top, bottom
 
@@ -524,8 +524,8 @@ def sentiment_blurb_result():
     def bysentiment_blurb(num):
         database.sort_values(by=["Sentiment Blurb"], inplace=True)
 
-        top = database[["Blurb", "Sentiment Blurb"]][-num:]
-        bottom = database[["Blurb", "Sentiment Blurb"]][:num]
+        top = database[["Blurb", "Sentiment Blurb"]][-int(num):]
+        bottom = database[["Blurb", "Sentiment Blurb"]][:int(num)]
 
         return top, bottom
 
