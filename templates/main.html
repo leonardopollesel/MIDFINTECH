@@ -70,10 +70,38 @@
          </div>
          <div class="w3-third w3-container w3-margin-bottom w3-center">
             <a href="{{url_for('sentiment_score')}}">
-            <img src="/static/sentiment.jpg" alt="Noun" width="455"  height="350" class="w3-hover"> </a>
+            <img src="/static/sentiment.jpg" alt="sentiment" width="455"  height="350" class="w3-hover"> </a>
             <div class="w3-container ">
                <p><b>Sentiment Analysis</b></p>
                <p>Given the title we give you the sentiment analysis of the blurb</p>
+            </div>
+         </div>
+          <div class="w3-third w3-container w3-margin-bottom w3-center">
+            <a href="{{url_for('sentiment_title')}}">
+            <img src="/static/sentiment_t.jpg" alt="Sentiment_title" width="455"  height="350" class="w3-hover"> </a>
+            <div class="w3-container ">
+               <p><b>Sentiment for Title</b></p>
+               <p>Given a number we return the top and bottom book titles</p>
+            </div>
+         </div>
+      </div>
+       <div class="w3-row-padding">
+         <div class="w3-third w3-container w3-margin-bottom w3-center">
+            <div class="w3-container ">
+               <p></p>
+            </div>
+         </div>
+         <div class="w3-third w3-container w3-margin-bottom w3-center">
+            <a href="{{url_for('sentiment_blurb')}}">
+            <img src="/static/sentiment_b.jpg" alt="Sentiment_blurb" width="450"  height="350" class="w3-hover"> </a>
+            <div class="w3-container w3-center">
+               <p><b>Sentiment for Blurbs</b></p>
+               <p>Given a number we return the top and bottom book blurbs</p>
+            </div>
+         </div>
+          <div class="w3-third w3-container w3-margin-bottom w3-center">
+            <div class="w3-container ">
+               <p>  </p>
             </div>
          </div>
       </div>
