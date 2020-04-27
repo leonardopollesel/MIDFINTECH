@@ -492,7 +492,7 @@ def sentiment_title():
 
 @app.route("/sentiment_title_result", methods=["GET", "POST"])
 def sentiment_title_result():
-    user_num = request.form["Number"]
+    user_num = request.form["number"]
 
     def bysentiment_title(num):
         database.sort_values(by=["Sentiment Title"], inplace=True)
@@ -519,7 +519,7 @@ def sentiment_blurb():
 
 @app.route("/sentiment_blurb_result", methods=["GET", "POST"])
 def sentiment_blurb_result():
-    user_num = request.form["Number"]
+    user_num = request.form["number"]
 
     def bysentiment_blurb(num):
         database.sort_values(by=["Sentiment Blurb"], inplace=True)
