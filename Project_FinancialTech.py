@@ -497,12 +497,12 @@ def sentiment_title_result():
     def bysentiment_title(num):
         database.sort_values(by=["Sentiment Title"], inplace=True)
 
-        top = database[["Title", "Sentiment Title"]][-int(num):]
-        bottom = database[["Title", "Sentiment Title"]][:int(num)]
+        top = database[["Title", "Sentiment Title"]][-num:]
+        bottom = database[["Title", "Sentiment Title"]][:num]
 
         return top, bottom
 
-    table_senti = bysentiment_title(user_num)
+    table_senti = bysentiment_title(int(user_num))
 
     return render_template("search_solution.html", tables=table_senti.to_html())
 
@@ -524,12 +524,12 @@ def sentiment_blurb_result():
     def bysentiment_blurb(num):
         database.sort_values(by=["Sentiment Blurb"], inplace=True)
 
-        top = database[["Blurb", "Sentiment Blurb"]][-int(num):]
-        bottom = database[["Blurb", "Sentiment Blurb"]][:int(num)]
+        top = database[["Blurb", "Sentiment Blurb"]][-num:]
+        bottom = database[["Blurb", "Sentiment Blurb"]][:num]
 
         return top, bottom
 
-    table_senti = bysentiment_blurb(user_num)
+    table_senti = bysentiment_blurb(int(user_num))
 
     return render_template("search_solution.html", tables=table_senti.to_html())
 
